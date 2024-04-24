@@ -16,7 +16,7 @@ routerP.get('/', async (req, res) => {
     } catch (error) {
         res.status(500).json({ error: 'Error al obtener los productos' })
     }
-});
+})
 
 routerP.get('/:pid', async (req, res) => {
     try {
@@ -28,6 +28,17 @@ routerP.get('/:pid', async (req, res) => {
         res.json(product)
     } catch (error) {
         res.status(500).json({ error: 'Error al obtener el producto' })
+    }
+})
+
+routerP.post('/', async (req , res) => {
+    try {
+        const productData =  req.body
+        await productsManager.addProduct(productData)
+        res.status (200).json({message: 'Producto agregado correctamente'})
+    } catch (error) {
+        console.log(error)
+        res.status (500).json ({message: 'Error al agregar el producto'})
     }
 })
 

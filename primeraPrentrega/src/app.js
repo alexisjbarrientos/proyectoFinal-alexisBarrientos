@@ -1,14 +1,16 @@
-import  Express  from "express";
-import routerP from "./router/products.router.js";
+import express from "express"
+import routerP from "./router/products.router.js"
+import routerC from "./router/carts.router.js"
 
-const app = Express ()
+const app = express()
 const PORT = 8080
 
-app.use(Express.urlencoded({extended: true}))
-app.use(Express.json())
+app.use(express.urlencoded({ extended: true }))
+app.use(express.json())
 
-app.use("/api/product",routerP)
+app.use("/api/products", routerP)
+app.use("/api/carts", routerC)
 
-app.listen(PORT, ()=>{
-    console.log(`run server correctly on port ${PORT}`)
+app.listen(PORT, () => {
+    console.log(`El servidor está funcionando correctamente en el puerto ${PORT}`)
 })
