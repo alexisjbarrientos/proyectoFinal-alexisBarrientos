@@ -17,16 +17,12 @@ routerC.get('/', async (req, res) => {
 })
 
 routerC.get('/:cid', async (req, res) => {
-  const { cid } = req.params
   try {
-    const carritofound = await cm.getCartById(cid)
-    if (!carritofound) {
-      return res.status(404).send({ status: 'error', message: `Carrito con ID: ${cid} no encontrado` })
-    }
-    res.json({ status: 'success', carritofound })
+    const { cid } = req.params
+      const cart = await cm.getCartById(cid)
+      res.json({status:"success",cart}) 
   } catch (error) {
-    console.error('Error:', error)
-    res.status(500).send('Error Interno del Servidor')
+      res.status(500).send('Error Interno del Servidor')
   }
 })
 
@@ -40,10 +36,10 @@ routerC.post('/', async (req, res) => {
 
     const validProducts = []
 
-    for (const product of obj) {
-      const checkId = await pm.getProductsId(product._id)
+    for (const products of obj) {
+      const checkId = await pm.getProductsId(products._id)
       if (checkId === null) {
-        return res.status(404).send(`Producto con ID ${product._id} no encontrado`)
+        return res.status(404).send(`Producto con ID ${products._id} no encontrado`)
       }
       validProducts.push(checkId)
     }
@@ -62,11 +58,12 @@ routerC.post('/:cid/products/:pid', async (req, res) => {
   const { quantity } = req.body
 
   try {
+    //console.log(`Checking product with ID: ${pid}`)
     const checkIdProduct = await pm.getProductsId(pid)
     if (!checkIdProduct) {
       return res.status(404).send({ message: `Producto con ID: ${pid} no encontrado` })
     }
-
+    //console.log(`Checking cart with ID: ${cid}`)
     const checkIdCart = await cm.getCartById(cid)
     if (!checkIdCart) {
       return res.status(404).send({ message: `Carrito con ID: ${cid} no encontrado` })

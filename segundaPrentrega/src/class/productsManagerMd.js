@@ -2,9 +2,10 @@ import {productsModel} from "../models/products.model.js"
 
 class ProductManager{
 
-getProducts = async () => {
+getProducts = async (filter,options) => {
 try {
-    return await productsModel.find().lean()
+    //  return await productsModel.find().lean()
+    return await productsModel.paginate(filter, options)
 } catch (error) {
     console.error("Error al obtener los productos.", error)
 }
@@ -12,10 +13,19 @@ try {
 
 getProductsId = async (id) => {
 try {
-    return await productsModel.find(id)
+    return await productsModel.findById(id)
 } catch (error) {
     console.error("Error al obtener el producto.", error)
 }
+}
+
+getProductsView = async () => {
+    try {
+        return await productsModel.find().lean();
+
+    } catch (err) {
+        return err
+    }
 }
 
 addProducts = async (product) => {
@@ -42,6 +52,23 @@ try {
 } catch (error) {
     console.log("Error al eliminar el producto.",error)
 }}
+
+ cateG= async () =>{
+    try {
+      const cateG = await productsModel.aggregate([
+        {
+          $group: {
+            _id: null,
+            category: { $addToSet: "$category" }
+          }
+        }
+      ])
+      return cateG[0].category
+    } catch (error) {
+      console.error("Error al obtener las categorías.", error)
+      throw error
+    }
+  }
 }
 
 export default ProductManager
